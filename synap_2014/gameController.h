@@ -15,6 +15,7 @@
 @property NSString * reGameAsk;
 @property NSString * endGreeting;
 @property NSString * retypeReminder;
+@property NSMutableDictionary *ladderPointsDic;
 @property int gameStage;
 
 - (NSMutableArray *)numberToStringArray: (NSString *)stringSet;

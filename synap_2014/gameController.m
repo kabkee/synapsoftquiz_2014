@@ -16,6 +16,7 @@
 @implementation gameController
 @synthesize startGreeting, endGreeting, reGameAsk, ladderInputAsk, snakeInputAsk, retypeReminder;
 @synthesize gameStage;
+@synthesize ladderPointsDic;
 
 - (id) init
 {
@@ -28,6 +29,7 @@
 
     // 1: (y,x), 2: player number, 3: Restart?, 4: End
     gameStage = 1;
+    ladderPointsDic = [[NSMutableDictionary alloc]init];
     
     return self;
 }
@@ -75,6 +77,7 @@
     //NSLog(@"%@", stringArray); // "(123, 321)"
 	return stringArray;
 }
+
 
 
 @end

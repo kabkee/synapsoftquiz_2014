@@ -65,6 +65,9 @@ static NSString * pretypeReminder = @"retypeReminder";
     }else if ([status isEqualToString:pretypeReminder]){
         textViewScreen.text = [textViewScreen.text stringByAppendingString: [gameCtr retypeReminder]];
     }
+    NSRange bottom = NSMakeRange(textViewScreen.text.length -1, 1);
+    [textViewScreen scrollRangeToVisible:bottom];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -96,18 +99,22 @@ static NSString * pretypeReminder = @"retypeReminder";
     // Validating (y,x), extracting numbers of (y,x), and appending to the right arrayView of (y,x)
     if ([gameCtr gameStage] == 1) {
         NSArray *tempNumbersArray = [gameCtr numberToStringArray:textField.text];
-        if( (int)tempNumbersArray[0] > 10 || (int)tempNumbersArray[0] < 1){
-            [self logGameStatus:pretypeReminder];
-            textField.text = @"";
-            return YES;
-        }
-        if( (int)tempNumbersArray[1] > 6 || (int)tempNumbersArray[1] < 1){
-            [self logGameStatus:pretypeReminder];
-            textField.text = @"";
-            return YES;
-        }
-        NSString * tempStringForYX = [NSString stringWithFormat:@"(%@,%@)", tempNumbersArray[0], tempNumbersArray[1]];
+        NSString *tempIndex0 = tempNumbersArray[0];
+        NSString *tempIndex1 = tempNumbersArray[1];
+        NSString * tempStringForYX = [NSString stringWithFormat:@"(%@,%@)", tempIndex0, tempIndex1];
         
+        // Check if x and y is valid numbers
+        if( [tempIndex0 intValue] > 10 || [tempIndex0 intValue] < 1 || [tempIndex1 intValue] > [textFieldPlayers.text intValue] || [tempIndex1 intValue] < 1 ){
+            [self textViewToBottomAndAppendInput:textViewScreen :tempStringForYX];
+            [self logGameStatus:pretypeReminder];
+            textField.text = @"";
+            return YES;
+        }else{
+            // Recheck if there're neightborhoods beside of x
+            [self textViewToBottomAndAppendInput:textViewScreen :tempStringForYX];
+            [self textViewToBottomAndAppendInput:textViewLadderPoint :tempStringForYX];
+            textField.text = @"";
+        }
     }else if([gameCtr gameStage] == 3){
         if ([textField.text isEqualToString:@"y"] || [textField.text isEqualToString:@"Y"]) {
             
@@ -131,8 +138,8 @@ static NSString * pretypeReminder = @"retypeReminder";
     return YES;
 }
 
--(void)textViewToBottomAndAppendInput: (UITextView *)textView :(UITextField *)textField{
-    textView.text = [textView.text stringByAppendingString:textField.text];
+-(void)textViewToBottomAndAppendInput: (UITextView *)textView :(NSString *)input{
+    textView.text = [textView.text stringByAppendingString:input];
     textView.text = [textView.text stringByAppendingString:@"\r"];
     
     NSRange bottom = NSMakeRange(textView.text.length -1, 1);
