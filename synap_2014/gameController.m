@@ -78,6 +78,48 @@
 	return stringArray;
 }
 
+-(BOOL)ladderPointInsertPossibility: (int)y : (int)x
+{
+    NSNumber * tempNsnY = [NSNumber numberWithInt:y];
+    __unused NSNumber * tempNsnX = [NSNumber numberWithInt:x];
+    if ([ladderPointsDic objectForKey: tempNsnY]) {
+        if ([[ladderPointsDic objectForKey:tempNsnY] count] >=3) {
+            return NO;
+        }else{
+            NSArray *tempLadderPointsArray = [ladderPointsDic objectForKey: tempNsnY];
+            NSNumber * objectNumber;
+            for (objectNumber in tempLadderPointsArray) {
+                if ([objectNumber intValue] == x -1 || [objectNumber intValue] == x +1) {
+                    return NO;
+                }
+            }
+            return YES;
+        }
+    }else{
+        return YES;
+    }
+    return NO;
+}
+
+-(BOOL)ladderPointInsert: (int)y : (int)x
+{
+    NSNumber * tempNsnY = [NSNumber numberWithInt:y];
+    NSNumber * tempNsnX = [NSNumber numberWithInt:x];
+    NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+    
+    if ([ladderPointsDic objectForKey:tempNsnY]) {
+        tempArray = [ladderPointsDic objectForKey:tempNsnY];
+        [tempArray addObject:tempNsnX];
+        [ladderPointsDic setObject:tempArray forKey:tempNsnY];
+        return YES;
+    }else{
+        [tempArray addObject:tempNsnX];
+        [ladderPointsDic setObject:tempArray forKey:tempNsnY];
+        return YES;
+    }
+    return NO;
+    
+}
 
 
 @end

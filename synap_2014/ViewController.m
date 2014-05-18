@@ -21,7 +21,7 @@ static NSString * pLadderInputAsk = @"ladderInputAsk";
 static NSString * pSnakeInputAsk = @"snakeInputAsk";
 static NSString * pReGameAsk = @"reGameAsk";
 static NSString * pEndGreeting = @"endGreeting";
-static NSString * pretypeReminder = @"retypeReminder";
+static NSString * pRetypeReminder = @"retypeReminder";
 
 @implementation ViewController
 
@@ -36,7 +36,12 @@ static NSString * pretypeReminder = @"retypeReminder";
     [super viewDidLoad];
     
     self.textFieldInput.delegate = self;
+    [self gameInit];
 
+}
+
+- (void)gameInit
+{
     // Show player number on the screen
     textFieldPlayers.text = [NSString stringWithFormat:@"%@",[myAppDelegate players]];
     
@@ -62,7 +67,7 @@ static NSString * pretypeReminder = @"retypeReminder";
         textViewScreen.text = [textViewScreen.text stringByAppendingString: [gameCtr reGameAsk]];
     }else if ([status isEqualToString:pEndGreeting]){
         textViewScreen.text = [textViewScreen.text stringByAppendingString: [gameCtr endGreeting]];
-    }else if ([status isEqualToString:pretypeReminder]){
+    }else if ([status isEqualToString:pRetypeReminder]){
         textViewScreen.text = [textViewScreen.text stringByAppendingString: [gameCtr retypeReminder]];
     }
     NSRange bottom = NSMakeRange(textViewScreen.text.length -1, 1);
@@ -93,7 +98,6 @@ static NSString * pretypeReminder = @"retypeReminder";
             [self logGameStatus:pReGameAsk];
             gameCtr.gameStage ++; // gameStage = 3
         }
-        
     }
     
     // Validating (y,x), extracting numbers of (y,x), and appending to the right arrayView of (y,x)
@@ -101,44 +105,52 @@ static NSString * pretypeReminder = @"retypeReminder";
         NSArray *tempNumbersArray = [gameCtr numberToStringArray:textField.text];
         NSString *tempIndex0 = tempNumbersArray[0];
         NSString *tempIndex1 = tempNumbersArray[1];
+        int tempIndex0Int = [tempIndex0 intValue];
+        int tempIndex1Int = [tempIndex1 intValue];
         NSString * tempStringForYX = [NSString stringWithFormat:@"(%@,%@)", tempIndex0, tempIndex1];
         
         // Check if x and y is valid numbers
-        if( [tempIndex0 intValue] > 10 || [tempIndex0 intValue] < 1 || [tempIndex1 intValue] > [textFieldPlayers.text intValue] || [tempIndex1 intValue] < 1 ){
+        if( tempIndex0Int > 10 || tempIndex0Int < 1 || tempIndex1Int > [textFieldPlayers.text intValue] || tempIndex1Int < 1 ){
             [self textViewToBottomAndAppendInput:textViewScreen :tempStringForYX];
-            [self logGameStatus:pretypeReminder];
+            [self logGameStatus:pRetypeReminder];
             textField.text = @"";
             return YES;
         }else{
             // Recheck if there're neightborhoods beside of x
-            [self textViewToBottomAndAppendInput:textViewScreen :tempStringForYX];
-            [self textViewToBottomAndAppendInput:textViewLadderPoint :tempStringForYX];
+            __unused NSNumber * tempNsnX = [NSNumber numberWithInt:tempIndex1Int];
+            __unused NSNumber * tempNsnY = [NSNumber numberWithInt:tempIndex0Int];
+            if ([gameCtr ladderPointInsertPossibility:tempIndex0Int :tempIndex1Int]) {
+                [self textViewToBottomAndAppendInput:textViewScreen :tempStringForYX];
+                [self textViewToBottomAndAppendInput:textViewLadderPoint :tempStringForYX];
+                [gameCtr ladderPointInsert:tempIndex0Int :tempIndex1Int];
+            }else{
+                [self textViewToBottomAndAppendInput:textViewScreen :tempStringForYX];
+                [self logGameStatus:pRetypeReminder];
+            }
             textField.text = @"";
+            return YES;
+        }
+    }else if([gameCtr gameStage] == 2){
+        if ([textField.text intValue] <1 || [textField.text intValue] > [textFieldPlayers.text intValue]) {
+            [self logGameStatus:pRetypeReminder];
+            textField.text = @"";
+        }else{
+            [self searchingForResult:[textField.text intValue]];
         }
     }else if([gameCtr gameStage] == 3){
         if ([textField.text isEqualToString:@"y"] || [textField.text isEqualToString:@"Y"]) {
-            
+            gameCtr = [[gameController alloc]init];
+            [self gameInit];
         }else if ([textField.text isEqualToString:@"n"] || [textField.text isEqualToString:@"N"]){
             [self logGameStatus:pEndGreeting];
             textFieldInput.enabled = NO;
         }
     }
-    
-
-        
-    NSRange pointsBottom = NSMakeRange(self.textViewLadderPoint.text.length -1, 1);
-    [self.textViewLadderPoint scrollRangeToVisible:pointsBottom];
-    
-    
-    
-    // Appending textField.text to the screen
-    
-    
     textField.text = @"";
     return YES;
 }
 
--(void)textViewToBottomAndAppendInput: (UITextView *)textView :(NSString *)input{
+- (void)textViewToBottomAndAppendInput: (UITextView *)textView :(NSString *)input{
     textView.text = [textView.text stringByAppendingString:input];
     textView.text = [textView.text stringByAppendingString:@"\r"];
     
@@ -147,10 +159,15 @@ static NSString * pretypeReminder = @"retypeReminder";
 }
 
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
 }
 
+- (int)searchingForResult: (int)player
+{
+    
+    return 0;
+}
 
 
 @end
