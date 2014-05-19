@@ -24,7 +24,7 @@
     ladderInputAsk = @"사다리 정보를 입력하세요(x는 입력 완료).\r";
     snakeInputAsk = @"사다리 게임을 시작할 출발 지점을 입력하세요(x는 입력 완료).\r";
     reGameAsk = @"처음부터 다시 하시겠습니까?(y/n)\r";
-    endGreeting = @"사다리게임을 종료합니다.\r다시하시려면 앱을 껏다 켜세요.\r";
+    endGreeting = @"사다리게임을 종료합니다.\r";
     retypeReminder = @"다시 입력해주세요.\r";
 
     // 1: (y,x), 2: player number, 3: Restart?, 4: End
@@ -121,5 +121,28 @@
     
 }
 
+- (int)searchingForResult: (int)player
+{
+    int intY = 1;
+    int intX = player;
+
+    NSNumber * nsnY;
+    NSNumber * nsnX;
+    NSNumber * nsnPrevX;
+    
+    while (intY <=10) {
+        nsnY = [NSNumber numberWithInt:intY];
+        nsnX = [NSNumber numberWithInt:intX];
+        nsnPrevX = [NSNumber numberWithInt:intX-1];
+        NSArray * ladderPointsX = [ladderPointsDic objectForKey:nsnY];
+        if ([ladderPointsX containsObject: nsnX]) {
+            intX++;
+        }else if ( [ladderPointsX containsObject: nsnPrevX] ) {
+            intX--;
+        }
+        intY ++;
+    }
+    return intX;
+}
 
 @end

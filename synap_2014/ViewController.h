@@ -14,8 +14,12 @@
 @property (strong, nonatomic) IBOutlet UITextView *textViewScreen;
 @property (strong, nonatomic) IBOutlet UITextView *textViewLadderPoint;
 @property (strong, nonatomic) IBOutlet UITextField *textFieldInput;
-@property (strong, nonatomic) IBOutlet UIButton *buttonGetResult;
-@property (strong, nonatomic) IBOutlet UITextField *textFieldResult;
+@property (strong, nonatomic) IBOutlet UIButton *btnInfo;
+@property (strong, nonatomic) IBOutlet UIButton *btnNewGame;
+@property (strong, nonatomic) IBOutlet UIButton *btnAutoDemoGame;
+- (IBAction)actNewGame:(id)sender;
+- (IBAction)actDemoGame:(id)sender;
+
 
 
 @end

@@ -14,6 +14,7 @@
 
 @interface ViewController ()
 @property gameController * gameCtr;
+@property BOOL demoActivated;
 @end
 
 static NSString * pStartGreeting = @"startGreeting";
@@ -25,11 +26,11 @@ static NSString * pRetypeReminder = @"retypeReminder";
 
 @implementation ViewController
 
-@synthesize textFieldInput, textFieldPlayers, textFieldResult;
+@synthesize textFieldInput, textFieldPlayers;
 @synthesize textViewScreen, textViewLadderPoint;
-@synthesize buttonGetResult;
+@synthesize btnInfo, btnNewGame;
 @synthesize gameCtr;
-
+@synthesize demoActivated;
 
 - (void)viewDidLoad
 {
@@ -37,7 +38,7 @@ static NSString * pRetypeReminder = @"retypeReminder";
     
     self.textFieldInput.delegate = self;
     [self gameInit];
-
+    demoActivated = FALSE;
 }
 
 - (void)gameInit
@@ -52,6 +53,9 @@ static NSString * pRetypeReminder = @"retypeReminder";
     [self logGameStatus:pStartGreeting];
     [self logGameStatus:pLadderInputAsk];
     textViewLadderPoint.text = @"(y,x)";
+    
+    // Reset demoActivated as FALSE
+    demoActivated = FALSE;
 }
 
 - (void)logGameStatus : (NSString *)status
@@ -88,15 +92,20 @@ static NSString * pRetypeReminder = @"retypeReminder";
     
     // Detecting 'x'
     if ( [textField.text isEqualToString:@"x"] || [textField.text isEqualToString:@"X"]) {
+        [self textViewToBottomAndAppendInput:textViewScreen :textField.text :TRUE];
         // Detecting 'x' to end putting (y,x) for letter bar
         if ([gameCtr gameStage] == 1) {
             [self logGameStatus:pSnakeInputAsk];
             gameCtr.gameStage ++; // gameStage = 2
+            textField.text = @"";
+            return YES;
         }
         // Detecting 'x' to end putting player number
         else if([gameCtr gameStage] == 2){
             [self logGameStatus:pReGameAsk];
             gameCtr.gameStage ++; // gameStage = 3
+            textField.text = @"";
+            return YES;
         }
     }
     
@@ -108,10 +117,10 @@ static NSString * pRetypeReminder = @"retypeReminder";
         int tempIndex0Int = [tempIndex0 intValue];
         int tempIndex1Int = [tempIndex1 intValue];
         NSString * tempStringForYX = [NSString stringWithFormat:@"(%@,%@)", tempIndex0, tempIndex1];
-        
+
+        [self textViewToBottomAndAppendInput:textViewScreen :tempStringForYX :TRUE];
         // Check if x and y is valid numbers
         if( tempIndex0Int > 10 || tempIndex0Int < 1 || tempIndex1Int > [textFieldPlayers.text intValue] || tempIndex1Int < 1 ){
-            [self textViewToBottomAndAppendInput:textViewScreen :tempStringForYX];
             [self logGameStatus:pRetypeReminder];
             textField.text = @"";
             return YES;
@@ -120,24 +129,26 @@ static NSString * pRetypeReminder = @"retypeReminder";
             __unused NSNumber * tempNsnX = [NSNumber numberWithInt:tempIndex1Int];
             __unused NSNumber * tempNsnY = [NSNumber numberWithInt:tempIndex0Int];
             if ([gameCtr ladderPointInsertPossibility:tempIndex0Int :tempIndex1Int]) {
-                [self textViewToBottomAndAppendInput:textViewScreen :tempStringForYX];
-                [self textViewToBottomAndAppendInput:textViewLadderPoint :tempStringForYX];
+                [self textViewToBottomAndAppendInput:textViewLadderPoint :tempStringForYX :FALSE];
                 [gameCtr ladderPointInsert:tempIndex0Int :tempIndex1Int];
             }else{
-                [self textViewToBottomAndAppendInput:textViewScreen :tempStringForYX];
                 [self logGameStatus:pRetypeReminder];
             }
             textField.text = @"";
             return YES;
         }
     }else if([gameCtr gameStage] == 2){
+        [self textViewToBottomAndAppendInput:textViewScreen :textField.text :TRUE];
         if ([textField.text intValue] <1 || [textField.text intValue] > [textFieldPlayers.text intValue]) {
             [self logGameStatus:pRetypeReminder];
             textField.text = @"";
         }else{
-            [self searchingForResult:[textField.text intValue]];
+            int gameResult = [gameCtr searchingForResult:[textField.text intValue]];
+            [self textViewToBottomAndAppendInput:textViewScreen :[NSString stringWithFormat:@"%d", gameResult] :FALSE];
+            textField.text = @"";
         }
     }else if([gameCtr gameStage] == 3){
+        [self textViewToBottomAndAppendInput:textViewScreen :textField.text :TRUE];
         if ([textField.text isEqualToString:@"y"] || [textField.text isEqualToString:@"Y"]) {
             gameCtr = [[gameController alloc]init];
             [self gameInit];
@@ -145,12 +156,15 @@ static NSString * pRetypeReminder = @"retypeReminder";
             [self logGameStatus:pEndGreeting];
             textFieldInput.enabled = NO;
         }
+        textField.text = @"";
     }
-    textField.text = @"";
     return YES;
 }
 
-- (void)textViewToBottomAndAppendInput: (UITextView *)textView :(NSString *)input{
+- (void)textViewToBottomAndAppendInput: (UITextView *)textView :(NSString *)input :(BOOL)fromUser{
+    if (textView == textViewScreen && fromUser) {
+        textView.text = [textView.text stringByAppendingString:@"> "];
+    }
     textView.text = [textView.text stringByAppendingString:input];
     textView.text = [textView.text stringByAppendingString:@"\r"];
     
@@ -163,13 +177,39 @@ static NSString * pRetypeReminder = @"retypeReminder";
     [self.view endEditing:YES];
 }
 
-- (int)searchingForResult: (int)player
-{
-    
-    return 0;
+- (IBAction)actNewGame:(id)sender {
+    [self gameInit];
+    textFieldInput.enabled = TRUE;
 }
 
-
+- (IBAction)actDemoGame:(id)sender {
+    if (!demoActivated) {
+        NSMutableDictionary * ladderPointsDic = [gameCtr ladderPointsDic];
+        [ladderPointsDic setObject:@[@1] forKey:@1];
+        [ladderPointsDic setObject:@[@4] forKey:@2];
+        [ladderPointsDic setObject:@[@2,@5] forKey:@3];
+        [ladderPointsDic setObject:@[@3] forKey:@4];
+        [ladderPointsDic setObject:@[@2,@5] forKey:@5];
+        [ladderPointsDic setObject:@[@1,@4] forKey:@6];
+        [ladderPointsDic setObject:@[@3,@5] forKey:@7];
+        [ladderPointsDic setObject:@[@2,@4] forKey:@8];
+        [ladderPointsDic setObject:@[@1] forKey:@9];
+        [ladderPointsDic setObject:@[@3] forKey:@10];
+        
+        [self textViewToBottomAndAppendInput:textViewScreen :@"사다리 설치가 자동으로 됩니다." :FALSE];
+        [self textViewToBottomAndAppendInput:textViewScreen :@"채용퀴즈의 예제와 동일하게 설정됩니다." :FALSE];
+        
+        NSArray * ladderPointsString = @[@"(1,1)",@"(2,4)",@"(3,2)",@"(3,5)",@"(4,3)",@"(5,2)",@"(5,5)",@"(6,1)",@"(6,4)",@"(7,3)",
+                                         @"(7,5)",@"(8,2)",@"(8,4)",@"(9,1)",@"(10,3)"];
+        for (int i = 0; i < [ladderPointsString count]; i++) {
+            [self textViewToBottomAndAppendInput:textViewLadderPoint :ladderPointsString[i] :FALSE];
+        }
+        gameCtr.gameStage ++; // stage2
+        
+        [self textViewToBottomAndAppendInput:textViewScreen :@"사다리를 타주세요." :FALSE];
+        demoActivated = TRUE;
+    }
+}
 @end
 
 

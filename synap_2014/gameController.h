@@ -21,4 +21,6 @@
 - (NSMutableArray *)numberToStringArray: (NSString *)stringSet;
 - (BOOL)ladderPointInsertPossibility: (int)y : (int)x;
 - (BOOL)ladderPointInsert: (int)y : (int)x;
+- (int)searchingForResult: (int)player;
+
 @end

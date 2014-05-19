@@ -22,6 +22,7 @@
 		430613361920FC0A00B57464 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 430613341920FC0A00B57464 /* InfoPlist.strings */; };
 		430613381920FC0A00B57464 /* synap_2014Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 430613371920FC0A00B57464 /* synap_2014Tests.m */; };
 		43061346192101FF00B57464 /* gameController.m in Sources */ = {isa = PBXBuildFile; fileRef = 43061345192101FF00B57464 /* gameController.m */; };
+		43FD0CF9192A2A1600111121 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 43FD0CF8192A2A1600111121 /* InfoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,8 @@
 		430613371920FC0A00B57464 /* synap_2014Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = synap_2014Tests.m; sourceTree = "<group>"; };
 		43061344192101FF00B57464 /* gameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gameController.h; sourceTree = "<group>"; };
 		43061345192101FF00B57464 /* gameController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gameController.m; sourceTree = "<group>"; };
+		43FD0CF7192A2A1600111121 /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
+		43FD0CF8192A2A1600111121 /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +123,8 @@
 				4306131E1920FC0A00B57464 /* Main.storyboard */,
 				430613211920FC0A00B57464 /* ViewController.h */,
 				430613221920FC0A00B57464 /* ViewController.m */,
+				43FD0CF7192A2A1600111121 /* InfoViewController.h */,
+				43FD0CF8192A2A1600111121 /* InfoViewController.m */,
 				43061344192101FF00B57464 /* gameController.h */,
 				43061345192101FF00B57464 /* gameController.m */,
 				430613241920FC0A00B57464 /* Images.xcassets */,
@@ -257,6 +262,7 @@
 				430613231920FC0A00B57464 /* ViewController.m in Sources */,
 				43061346192101FF00B57464 /* gameController.m in Sources */,
 				4306131D1920FC0A00B57464 /* AppDelegate.m in Sources */,
+				43FD0CF9192A2A1600111121 /* InfoViewController.m in Sources */,
 				430613191920FC0A00B57464 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -462,6 +468,7 @@
 				4306133D1920FC0A00B57464 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4306133E1920FC0A00B57464 /* Build configuration list for PBXNativeTarget "synap_2014Tests" */ = {
 			isa = XCConfigurationList;
@@ -470,6 +477,7 @@
 				430613401920FC0A00B57464 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

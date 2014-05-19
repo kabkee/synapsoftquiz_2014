@@ -179,4 +179,42 @@
     }
 }
 
+- (void)testGameCtrSearchingForResult
+{
+    NSArray * tempArray = @[@1];
+    [ladderPointsDic setObject:tempArray forKey:@1];
+    
+    int resultFrom1 = [gameCtr searchingForResult:1];
+    int resultFrom2 = [gameCtr searchingForResult:2];
+    int resultFrom3 = [gameCtr searchingForResult:3];
+    int resultFrom4 = [gameCtr searchingForResult:4];
+    
+    XCTAssert(resultFrom1 == 2, @"*** resultFrom1 == 2 is NOT True!!");
+    XCTAssert(resultFrom2 == 1, @"*** resultFrom2 == 1 is NOT True!!");
+    XCTAssert(resultFrom3 == 3, @"*** resultFrom3 == 3 is NOT True!!");
+    XCTAssert(resultFrom4 == 4, @"*** resultFrom3 == 4 is NOT True!!");
+}
+
+- (void)testGameCtrRealSimulator
+{
+    [ladderPointsDic setObject:@[@1] forKey:@1];
+    [ladderPointsDic setObject:@[@4] forKey:@2];
+    [ladderPointsDic setObject:@[@2,@5] forKey:@3];
+    [ladderPointsDic setObject:@[@3] forKey:@4];
+    [ladderPointsDic setObject:@[@2,@5] forKey:@5];
+    [ladderPointsDic setObject:@[@1,@4] forKey:@6];
+    [ladderPointsDic setObject:@[@3,@5] forKey:@7];
+    [ladderPointsDic setObject:@[@2,@4] forKey:@8];
+    [ladderPointsDic setObject:@[@1] forKey:@9];
+    [ladderPointsDic setObject:@[@3] forKey:@10];
+    
+    int resultFrom1 = [gameCtr searchingForResult:1];
+    int resultFrom2 = [gameCtr searchingForResult:3];
+    int resultFrom3 = [gameCtr searchingForResult:6];
+
+    XCTAssert(resultFrom1 == 6, @"*** resultFrom1 == 2 is NOT True!!");
+    XCTAssert(resultFrom2 == 5, @"*** resultFrom2 == 1 is NOT True!!");
+    XCTAssert(resultFrom3 == 3, @"*** resultFrom3 == 3 is NOT True!!");
+}
+
 @end
